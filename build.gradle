@@ -19,6 +19,7 @@ archivesBaseName = "QuickLeafDecay-MC${minecraft_version}"
 sourceCompatibility = targetCompatibility = sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    options.compilerArgs += '-proc:none'
 }
 
 
