@@ -37,6 +37,11 @@ public class QuickLeafDecay
 
 	public QuickLeafDecayConfig config;
 
+//	public net.minecraft.util.Direction getNormal()
+//	{
+//		return this.normal; // Not quite sure what this does for me, but might fix a problem with private access
+//	}
+
 	public QuickLeafDecay()
 	{
 		INSTANCE = this;
@@ -61,7 +66,7 @@ public class QuickLeafDecay
 
 	public void breakBlock(BreakEvent event)
 	{
-		if (QuickLeafDecayConfig.playerDecay.get() && !(event.getPlayer() instanceof FakePlayer) && !event.getWorld().isRemote())
+		if (QuickLeafDecayConfig.playerDecay.get() && !(event.getPlayer() instanceof FakePlayer) && !event.getWorld().isClientSide()) // isClientSide might not be opposite of isRemote? Let's try it anyway
 		{
 			brokenBlockCache.put(event.getPos(), 0);
 		}
@@ -69,7 +74,7 @@ public class QuickLeafDecay
 
 	public void notifyNeighbors(NeighborNotifyEvent event)
 	{
-		if (!event.getWorld().isRemote() && !QuickLeafDecayConfig.playerDecay.get() || brokenBlockCache.getIfPresent(event.getPos()) != null)
+		if (!event.getWorld().isClientSide() && !QuickLeafDecayConfig.playerDecay.get() || brokenBlockCache.getIfPresent(event.getPos()) != null)
 		{
 			ServerWorld world = (ServerWorld) event.getWorld();
 
@@ -83,9 +88,9 @@ public class QuickLeafDecay
 
 				for (Direction direction : event.getNotifiedSides())
 				{
-					BlockPos offPos = event.getPos().offset(direction);
+					BlockPos offPos = event.getPos().offset(direction.getNormal()); // Normal could break all of this and send it to hell, but might as well try
 
-					if (world.isBlockPresent(offPos))
+					if (world.isLoaded(offPos))
 					{
 						BlockState state = world.getBlockState(offPos);
 
