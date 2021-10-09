@@ -7,12 +7,13 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import lumien.quickleafdecay.config.QuickLeafDecayConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block; // Replaces net.minecraft.block.Block
+import net.minecraft.world.level.block.state.BlockState; // Replaces net.minecraft.block.BlockState
+import net.minecraft.world.level.block.Blocks; // Need to check if block is air
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction; // Replaces net.minecraft.util.Direction
+import net.minecraft.core.BlockPos; // Replaces net.minecraft.util.math.BlockPos
+import net.minecraft.server.level.ServerLevel; // Replaces net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -36,11 +37,6 @@ public class QuickLeafDecay
 	public static QuickLeafDecay INSTANCE;
 
 	public QuickLeafDecayConfig config;
-
-//	public net.minecraft.util.Direction getNormal()
-//	{
-//		return this.normal; // Not quite sure what this does for me, but might fix a problem with private access
-//	}
 
 	public QuickLeafDecay()
 	{
@@ -76,19 +72,20 @@ public class QuickLeafDecay
 	{
 		if (!event.getWorld().isClientSide() && !QuickLeafDecayConfig.playerDecay.get() || brokenBlockCache.getIfPresent(event.getPos()) != null)
 		{
-			ServerWorld world = (ServerWorld) event.getWorld();
+			ServerLevel world = (ServerLevel) event.getWorld();
 
 			BlockState notifierState = event.getState();
 			Block b = notifierState.getBlock();
 
-			if (b.isAir(notifierState, world, event.getPos()))
+//			if (b.isAir()) // Apparently I don't need some arguments now. Old ones were notifierState, world, event.getPos()
+			if (b == Blocks.AIR) // Might work
 			{
 				if (QuickLeafDecayConfig.playerDecay.get())
 					brokenBlockCache.invalidate(event.getPos());
 
 				for (Direction direction : event.getNotifiedSides())
 				{
-					BlockPos offPos = event.getPos().offset(direction.getNormal()); // Normal could break all of this and send it to hell, but might as well try
+					BlockPos offPos = event.getPos().offset(direction.getNormal());
 
 					if (world.isLoaded(offPos))
 					{

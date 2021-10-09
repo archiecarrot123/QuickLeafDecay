@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState; // Replaces net.minecraft.block.BlockState
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos; // Replaces net.minecraft.util.math.BlockPos
+import net.minecraft.server.level.ServerLevel; // Replaces net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -25,7 +25,7 @@ public class LeafTickScheduler
 		scheduled = new ArrayList<ScheduledTick>();
 	}
 
-	public void schedule(ServerWorld world, BlockPos pos, int delay)
+	public void schedule(ServerLevel world, BlockPos pos, int delay)
 	{
 		this.planned.add(new ScheduledTick(world, pos, delay));
 	}
@@ -50,7 +50,7 @@ public class LeafTickScheduler
 				{
 					iterator.remove();
 
-					ServerWorld worldObj = st.worldReference.get();
+					ServerLevel worldObj = st.worldReference.get();
 					if (worldObj != null && worldObj.isLoaded(st.pos))
 					{
 						BlockState state = worldObj.getBlockState(st.pos);
@@ -68,15 +68,15 @@ public class LeafTickScheduler
 
 	class ScheduledTick
 	{
-		WeakReference<ServerWorld> worldReference;
+		WeakReference<ServerLevel> worldReference;
 		BlockPos pos;
 
 		int tick;
 
-		public ScheduledTick(ServerWorld worldObj, BlockPos pos, int tick)
+		public ScheduledTick(ServerLevel worldObj, BlockPos pos, int tick)
 		{
 			super();
-			this.worldReference = new WeakReference<ServerWorld>(worldObj);
+			this.worldReference = new WeakReference<ServerLevel>(worldObj);
 			this.pos = pos;
 			this.tick = tick;
 		}

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[37,)"
 license="MIT"
 issueTrackerURL="https://github.com/lumien231/QuickLeafDecay"
 displayURL="https://minecraft.curseforge.com/projects/quick-leaf-decay"
@@ -17,13 +17,13 @@ Makes leaves decay faster
 [[dependencies.quickleafdecay]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5]"
+    versionRange="[1.17.1]"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.quickleafdecay]]
     modId="forge"
     mandatory=true
-    versionRange="[36,)"
+    versionRange="[37,)"
     ordering="NONE"
     side="BOTH"
